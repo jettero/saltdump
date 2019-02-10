@@ -1,0 +1,8 @@
+#!/usr/bin/env python
+
+# NOTE: this is just a convenience wrapper for running jstat from the repo
+
+import saltdump.cmd
+
+if __name__ == '__main__':
+    saltdump.cmd.saltdump()

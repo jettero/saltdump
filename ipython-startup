@@ -1,0 +1,41 @@
+# vi:ft=python:
+# coding: utf-8
+
+from __future__ import print_function
+import logging
+import json
+import glob
+
+import saltdump.master_minion as MM
+import saltdump.event as E
+
+logging.basicConfig(level=logging.DEBUG)
+
+def get_json():
+    ret = list()
+    for fname in glob.glob('*.json') + glob.glob('*.js'):
+        try:
+            with open(fname, 'r') as fh:
+                dat = json.load(fh)
+                ret.append(dat)
+        except Exception as e:
+            print("couldn't read {0}: {1}".format(fname, e))
+    return ret
+jdat = get_json()
+if not jdat:
+    del jdat
+
+def tpcb(x):
+    print( json.dumps(x, indent=2) )
+    return True
+
+def mm(*kw):
+    global mm
+    mm = MM.MasterMinion(**kw)
+    return mm
+
+def mm_listen():
+    mm().listen_loop(tpcb)
+
+def mm_replay():
+    mm(replay_only=True, replay_job_cache=True).listen_loop(tpcb)

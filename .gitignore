@@ -1,0 +1,9 @@
+*.pyc
+__pycache__
+.eggs
+*.egg-info
+version.py
+build
+dist
+*.json
+*.js
