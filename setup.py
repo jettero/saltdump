@@ -2,6 +2,10 @@
 # coding: utf-8
 
 import sys
+
+if sys.version_info >= 3.0:
+    sys.exit('sorry, python > 2 is not supported')
+
 from setuptools import setup, find_packages
 from setuptools.command.test import test as TestCommand
 
