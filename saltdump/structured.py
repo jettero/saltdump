@@ -2,6 +2,7 @@
 
 import time
 import copy
+import json
 
 def _scrub(dat):
     dat = copy.deepcopy(dat)
@@ -21,6 +22,10 @@ def _scrub(dat):
 class StructuredMixin(object):
 
     @property
+    def jsonstru(self):
+        return json.dumps(self.structured)
+
+    @property
     def structured(self):
         ''' rewrite event['data'] structured logging '''
 
@@ -33,10 +38,19 @@ class StructuredMixin(object):
 
         short_path_no = list()
 
-        if 'jid' not in rdat:
-            rdat['jid'] = self.jid
+        try:
+            jid = self.jid
+            if 'jid' not in rdat:
+                rdat['jid'] = jid
+        except:
+            jid = None
 
-        short_path_no = [ rdat['jid'] ]
+        short_path_no = [ jid ]
+
+        # {"sd_class": "Event", "short_path": "minion/refresh/corky.vhb",
+        # "host": "corky.vhb", "time": 1550344791.0, "path":
+        # "minion/refresh/corky.vhb", "data": {"Minion data cache refresh":
+        # "corky.vhb", "jid": "<n/a>" }}
 
         if 'id' in rdat:
             ret['src_host'] = ret['host']

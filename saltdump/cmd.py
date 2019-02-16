@@ -40,6 +40,8 @@ class CmdRunner(Attr):
             out = cev.json(indent=0)
         elif self.output_format == 'salt':
             out = cev.outputter(default_outputter=self.salt_outputter)
+        elif self.output_format == 'stru':
+            out = cev.jsonstru
         elif self.output_format == 'txt':
             out = cev.short
         else:
@@ -98,7 +100,11 @@ class CmdRunner(Attr):
 
     salt: try to output events using the Salt outputters
 
-    stru: output one-line json intended for structured logging (e.g., Splunk, LogStash, etc)''')
+    stru: output one-line json intended for structured logging (e.g., Splunk,
+        LogStash, etc).  Some fields are added or removed for consistency and
+        public 0mq keys found in auth events are replaced with a much shorter
+        smattering of characters from the key.
+    ''')
 @click.option('-O', '--salt-outputter', type=str, default='nested')
 @click.argument('filter', nargs=-1)
 def saltdump(version, level, no_sudo_root, **opt):

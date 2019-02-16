@@ -565,6 +565,17 @@ class Auth(Event):
         self.act    = self.dat.get('act', NA)
 
     @property
+    def structured(self):
+        stru = super(Auth, self).structured
+        pkey = stru.get('data', {}).get('pub')
+        if "PUBLIC KEY" in pkey:
+            fake_finger = ''
+            for line in pkey.splitlines()[1:-1]:
+                fake_finger += line[0:2] + line[-2:]
+            stru['data']['pub'] = ''.join(sorted(fake_finger))
+        return stru
+
+    @property
     def what(self):
         v = self.try_attr('act')
         if v == 'accept':
@@ -590,6 +601,16 @@ class JobEvent(Event):
                 else:
                     asr.append(str(x))
         self.args_str = ' '.join(asr)
+
+class DataCacheRefresh(Event):
+    matches = (( 'tag', 'minion/refresh/*' ),)
+
+    @property
+    def structured(self):
+        stru = super(DataCacheRefresh, self).structured
+        mid = stru['minion_id'] = stru['src_host'] = self.tag.split('/')[-1]
+        stru['short_path'] = stru['short_path'].replace('/' + mid, '')
+        return stru
 
 class ExpectedReturns(Event):
     matches = (( 'tag', re.compile(r'\d+') ),)
