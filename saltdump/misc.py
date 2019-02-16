@@ -37,7 +37,9 @@ del build_tzinfos
 
 class DateParser:
     def __init__(self, date_string, fmt='%Y-%m-%d %H:%M:%S %Z/%z', guess_tz=os.environ.get('TZ','UTC')):
-        self.orig   = date_string
+        self.orig = date_string or ''
+        if not date_string:
+            date_string = 'now'
         self.parsed = dateutil.parser.parse(date_string, tzinfos=tzinfos)
         if self.parsed.tzinfo is None:
             self.parsed = self.parsed.replace(tzinfo=dateutil.tz.gettz())
