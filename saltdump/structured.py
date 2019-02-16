@@ -26,14 +26,17 @@ class StructuredMixin(object):
 
         ret, rdat = _scrub(self.raw)
 
+        ret['sd_class'] = self.__class__.__name__
         ret['host'] = self.salt_opts.get('id')
         ret['time'] = self.itime
         ret['path'] = ret.pop('tag')
 
         short_path_no = list()
 
-        if 'jid' in rdat:
-            short_path_no.append(rdat['jid'])
+        if 'jid' not in rdat:
+            rdat['jid'] = self.jid
+
+        short_path_no = [ rdat['jid'] ]
 
         if 'id' in rdat:
             ret['src_host'] = ret['host']
