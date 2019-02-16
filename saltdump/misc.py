@@ -37,7 +37,9 @@ build_tzinfos()
 del build_tzinfos
 
 class DateParser:
-    def __init__(self, date_string, fmt='%Y-%m-%d %H:%M:%S %Z/%z', guess_tz=os.environ.get('TZ','UTC')):
+    def __init__(self, date_string, fmt='%Y-%m-%d %H:%M:%S %Z/%z', force_tz='UTC'):
+        if force_tz:
+            os.environ['TZ'] = force_tz
         if not date_string or date_string == 'now':
             self.orig = datetime.datetime.now().isoformat()
         else:
