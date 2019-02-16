@@ -3,8 +3,8 @@
 
 import sys
 
-if sys.version_info >= 3.0:
-    sys.exit('sorry, python > 2 is not supported')
+if sys.version_info.major != 2:
+    sys.exit('requires python2')
 
 from setuptools import setup, find_packages
 from setuptools.command.test import test as TestCommand
