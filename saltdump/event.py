@@ -338,6 +338,8 @@ def event_classes():
     return [ x[1] for x in classes ]
 
 def classify_event(json_data):
+    if isinstance(json_data, Event):
+        return json_data
     raw = grok_json_event(json_data)
     for cls in event_classes():
         if cls.match(raw):
@@ -548,6 +550,7 @@ class Event(SaltConfigMixin):
     def __repr__(self):
         return self.short
     __str__ = __repr__
+
 
 class Auth(Event):
     matches = (( 'tag', 'salt/auth' ),)
