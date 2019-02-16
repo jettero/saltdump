@@ -37,7 +37,12 @@ setup(name='saltdump',
     cmdclass         = {'test': PyTest},
     packages         = find_packages(),
     setup_requires   = [ 'setuptools_scm' ],
-    install_requires = [ 'salt-ssh', 'click', 'lark-parser', 'py-dateutil' ],
+    install_requires = [
+        'salt-ssh',
+        'click',
+        'lark-parser',
+        'python-dateutil',
+    ],
 
     entry_points = {
         'console_scripts': [
