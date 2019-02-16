@@ -2,13 +2,14 @@
 
 import logging, copy
 import json, inspect, re
-import dateutil.parser, datetime
 from fnmatch import fnmatch
 from collections import OrderedDict
 
 import salt.output
 
+from .structured import StructuredMixin
 from .config import SaltConfigMixin
+from .misc import DateParser
 
 SHOW_JIDS = False
 
@@ -384,7 +385,7 @@ def my_jid_format(jid):
     except:
         return jid
 
-class Event(SaltConfigMixin):
+class Event(SaltConfigMixin, StructuredMixin):
     matches = ()
 
     def __init__(self, raw):
@@ -399,7 +400,9 @@ class Event(SaltConfigMixin):
             self.dat = self.dat['data']
 
         self.stamp = self.dat.get('_stamp')
-        self.dtime = dateutil.parser.parse(self.stamp) if self.stamp else None
+        self.ptime = DateParser(self.stamp)
+        self.dtime = self.ptime.parsed
+        self.itime = self.ptime.tstamp
 
     def __reduce__(self):
         return (self.__class__, (self.raw,))
