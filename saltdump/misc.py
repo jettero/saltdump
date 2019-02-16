@@ -38,10 +38,12 @@ del build_tzinfos
 
 class DateParser:
     def __init__(self, date_string, fmt='%Y-%m-%d %H:%M:%S %Z/%z', guess_tz=os.environ.get('TZ','UTC')):
-        self.orig = date_string or ''
-        if not date_string:
-            date_string = datetime.datetime.now().ctime()
-        self.parsed = dateutil.parser.parse(date_string, tzinfos=tzinfos)
+        if not date_string or date_string == 'now':
+            self.orig = datetime.datetime.now().isoformat()
+        else:
+            self.orig = date_string
+        del date_string
+        self.parsed = dateutil.parser.parse(self.orig, tzinfos=tzinfos)
         if self.parsed.tzinfo is None:
             self.parsed = self.parsed.replace(tzinfo=dateutil.tz.gettz())
         self.tstamp = time.mktime(self.parsed.timetuple())

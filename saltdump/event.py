@@ -31,15 +31,19 @@ def reformat_minion_ids(matchers):
     global REFORMAT_IDS
     REFORMAT_IDS = _m
 
-class Job(object):
+class Job(SaltConfigMixin, StructuredMixin):
     def __init__(self, jid):
         self.jid       = jid
         self.events    = []
         self.expected  = set()
         self.returned  = set()
         self.listeners = []
-        self.dtime     = None
         self.find_jobs = {}
+
+        self.ptime = DateParser('now')
+        self.stamp = self.ptime.orig
+        self.dtime = self.ptime.parsed
+        self.itime = self.ptime.tstamp
 
     @property
     def all_events(self):
@@ -176,7 +180,7 @@ class Job(object):
 
     @property
     def raw(self):
-        dat = dict(_stamp=datetime.datetime.now().isoformat())
+        dat = dict(_stamp=self.stamp)
         ret = dict(tag=self.tag, data=dat)
         for fname in ('event_count', 'find_count', 'returned_count', 'rc_count', 'job_desc'):
             v = getattr(self, fname)
