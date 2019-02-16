@@ -8,4 +8,4 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 @pytest.fixture
 def pinglog_json():
-    return list(read_event_file('t/_ping.log'))
+    return list( read_event_file('t/_ping.log') )
