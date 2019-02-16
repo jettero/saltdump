@@ -2,6 +2,7 @@
 
 import time, os, re
 import dateutil.parser, dateutil.tz
+import datetime
 
 class Attr(object):
     def __init__(self, **kw):
@@ -39,7 +40,7 @@ class DateParser:
     def __init__(self, date_string, fmt='%Y-%m-%d %H:%M:%S %Z/%z', guess_tz=os.environ.get('TZ','UTC')):
         self.orig = date_string or ''
         if not date_string:
-            date_string = 'now'
+            date_string = datetime.datetime.now().ctime()
         self.parsed = dateutil.parser.parse(date_string, tzinfos=tzinfos)
         if self.parsed.tzinfo is None:
             self.parsed = self.parsed.replace(tzinfo=dateutil.tz.gettz())
